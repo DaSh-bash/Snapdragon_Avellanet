@@ -1,0 +1,265 @@
+# Dialy log Avellanet project
+
+2/09/24
+
+#Twisst analysis
+
+From Arka:
+
+Path to all geno files
+/nfs/scistore18/bartogrp/apal/snap_hap_repHZ/genome_scans/geno/*
+
+
+I am just copying the relavant portions from Simon's git repo
+
+To get neighbour joining trees for snp windows, I have a script that runs Phyml for windows, using parallelisation, and outputs a single trees file. You can get the script from my genomics_general repo. Here is an example command:
+python phyml_sliding_windows.py -T 10 -g input.phased.geno.gz --prefix output.phyml_bionj.w50 -w 50 --windType sites --model GTR --optimise n
+For running TWISST, i have been running this, and therefore needs to be the same across comparisons. NB: It is important to keep the --method fixed
+python ~/twisst/twisst.py -t $trees \
+    -w $outFile \
+    -g AveM -g AveY -g PlaM -g PlaY \
+    --method fixed \
+    --groupsFile $popFile
+This is the samples file:
+/nfs/scistore18/bartogrp/apal/snap_hap_repHZ/samples/AvePla.MY.n74.pops.txt
+
+#Simon's scripts: https://github.com/simonhmartin/genomics_general
+
+#Wroking
+git clone https://github.com/simonhmartin/genomics_general.git
+
+Done!
+
+/nfs/scistore18/bartogrp/dshipili/Avellanet-Planoles/00_TWISST/genomics_general/phylo/phyml_sliding_windows.py
+
+python /nfs/scistore18/bartogrp/dshipili/Avellanet-Planoles/00_TWISST/genomics_general/phylo/phyml_sliding_windows.py -T 10 -g Chr1.AvePla.stitch.SnpOnly.final.region.geno.gz --prefix Chr1.AvePla.stitch.SnpOnly.final.w50 -w 50 --windType sites --model GTR --optimise n
+
+Selecting region of interest:
+
+awk 'NR==1 || ($2 >= 4500000 && $2 <= 6500000)' 2_Chr2.AvePla.stitch.SnpOnly.final.geno  > Chr2.AvePla.stitch.SnpOnly.final.region.geno
+
+gzip Chr2.AvePla.stitch.SnpOnly.final.region.geno
+
+python /nfs/scistore18/bartogrp/dshipili/Avellanet-Planoles/00_TWISST/genomics_general/phylo/phyml_sliding_windows.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno.gz --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50 -w 50 --windType sites --model GTR --optimise n
+
+No! Two scripts should be in the same folder: copied phylo to main directory
+
+python genomics_general/phyml_sliding_windows.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno.gz --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50 -w 50 --windType sites --model GTR --optimise n
+
+Works, but doesn't have access to phyml, try :  --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml
+
+python genomics_general/phyml_sliding_windows.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno.gz --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50 -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n
+
+
+https://github.com/simonhmartin/genomics_general/issues/64
+
+python genomics_general/phyml_sliding_windows.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno.gz --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50  -w 50 --bootstrap 100 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n
+
+
+3/09/2024
+#Testing again
+python genomics_general/phyml_sliding_windows.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50  -w 50 --bootstrap 100 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n
+
+python genomics_general/phyml_sliding_windows.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50  -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n --log log
+
+
+Chr2    4517743 4520917 4519941 50      NA
+
+
+Chr2    4520965 4522512 4521781 50      -1885.85575
+
+..........................
+ooooooooooooooooooooooooooooo        CURRENT SETTINGS        ooooooooooooooooooooooooooooooooooo
+..........................
+
+. Sequence filename:                             Chr2_4520965_4522512_sna8v0sl.phy
+. Data type:                                     dna
+. Alphabet size:                                 4
+. Sequence format:                               interleaved
+. Number of data sets:                           1
+. Nb of bootstrapped data sets:                  0
+. Model name:                                    GTR
+. Proportion of invariable sites:                0.000000
+. Number of subst. rate categs:                  4
+. Gamma distribution parameter:                  1.000000
+. 'Middle' of each rate class:                   mean
+. Nucleotide equilibrium frequencies:            empirical
+. Optimise tree topology:                        no
+. Evaluated tree:                                file "BioNJ"
+. Optimise branch lengths:                       no
+. Optimise substitution model parameters:        yes
+. Run ID:                                        none
+. Random seed:                                   1725354083
+. Subtree patterns aliasing:                     no
+. Version:                                       20120412
+
+oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+
+
+
+. 48 patterns found (out of a total of 50 sites).
+
+. 0 sites without polymorphism (0.00
+
+Chr2    4531485 4532009 4531766 50      -1748.62245
+Chr2    4532010 4532880 4532306 50      -2526.17383
+
+12.09.2024
+
+python genomics_general/raxml_sliding_windows.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region.RAXML.w50  -w 50 --windType sites --model GTR  --optimise n --log log
+
+module load python/2.7
+
+#RAxML is not on cluster! move on to the next option
+
+Copying from Arka:
+/nfs/scistore18/bartogrp/apal/snap_hap_repHZ/polarisedVcfs/Chr2.polarised.vcf.gz
+
+
+bcftools view -r 2:45000000-65000000 Chr2.polarised.vcf.gz -Oz -o Chr2_region_45000000_65000000.vcf.gz && bcftools index Chr2_region_45000000_65000000.vcf.gz
+
+bcftools view -e 'GT="." || GT!~"^[0-1]\|[0-1]$"' Chr2.polarised.vcf.gz -Oz -o Chr2.cleaned.vcf.gz
+
+bcftools view -r 2:45000000-65000000 Chr2.cleaned.vcf.gz -Oz -o Chr2_region_45000000_65000000.vcf.gz && bcftools index Chr2_region_45000000_65000000.vcf.gz
+
+> # Create [binary] nexus alignment files, using the python script vcf2phylip.py ([https://github.com/edgardomortiz/vcf2phylip](https://github.com/edgardomortiz/vcf2phylip))
+python vcf2phylip/vcf2phylip.py -i Chr2_region_45000000_65000000.vcf.gz -b -f --haploid
+
+python vcf2phylip.py --input phased_input.vcf.gz --output-dir output_directory --haploid --fasta
+
+
+## Wrong, no phase
+
+## Selecting new chunk
+bcftools view -r 2:45000000-45010000 Chr2.cleaned.vcf.gz -Oz -o Chr2_region_45000000-45010000.vcf.gz && bcftools index Chr2_region_45000000-45010000.vcf.gz
+
+# trying plink -> distance matrix -> FastME (installed and fast)
+
+
+
+plink2 --vcf Chr2_region_45000000-45010000.vcf.gz --distance square --out Chr2_region_45000000-45010000 --phased
+
+
+
+fastme-2.1.5/binaries/fastme-2.1.5-linux64  -i ref-dist-mat.phy  -o skim-phylogeny.tre
+
+python vcf2phylip/vcf2phylip.py -i Chr2_region_45000000-45010000.vcf.gz -b -f
+
+#
+
+plink2 --vcf Chr2_region_45000000-45010000.vcf.gz --export phylip-phased --out output_file
+
+#Let's try to split vcf into two phases
+
+https://github.com/vcflib/vcflib/blob/master/doc/vcf2fasta.md
+
+conda create -n vcflib
+conda activate vcflib
+
+#Packages don't install
+
+
+bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT[\t%GT:1]\n' Chr2_region_45000000-45010000.vcf.gz | bgzip -c > Chr2_region_45000000-45010000.haplotype1.vcf.gz
+bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT[\t%GT:2]\n' Chr2_region_45000000-45010000.vcf.gz | bgzip -c > Chr2_region_45000000-45010000.haplotype2.vcf.gz
+
+
+-tmp
+
+python genomics_general/phyml_sliding_windows.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50  -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n --log log --tmp .
+
+#Modified script
+
+phyml_sliding_windows_retain_phy.py
+
+python genomics_general/phyml_sliding_windows_retain_phy.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50  -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n --log log --tmp .
+
+
+Traceback (most recent call last):
+  File "/nfs/scistore18/bartogrp/dshipili/Avellanet-Planoles/00_TWISST/genomics_general/phyml_sliding_windows_retain_phy.py", line 435, in <module>
+    if not test: os.rmdir(tmpDir)
+                 ^^^^^^^^^^^^^^^^
+OSError: [Errno 39] Directory not empty: './phyml_tmpwvr0n55r'
+
+FIXED!!!
+
+phyml --input Chr2_4520965_4522512_zkb5hxqk.phy --model GTR --o n -b 0
+
+Created custom script to run phyml
+bash run_phyml2.sh tmp/phyml_tmpcwd81ul1
+
+###TWISST now
+For running TWISST, i have been running this, and therefore needs to be the same across comparisons. NB: It is important to keep the --method fixed
+python ~/twisst/twisst.py -t $trees \
+    -w $outFile \
+    -g AveM -g AveY -g PlaM -g PlaY \
+    --method fixed \
+    --groupsFile $popFile
+This is the samples file:
+/nfs/scistore18/bartogrp/apal/snap_hap_repHZ/samples/AvePla.MY.n74.pops.txt
+
+
+python twisst/twisst.py -t Chr2_4520965_6443840.tree.gz  \
+    -w testtwisst \
+    -g AveM -g AveY -g PlaM -g PlaY \
+    --method fixed \
+    --groupsFile /nfs/scistore18/bartogrp/apal/snap_hap_repHZ/samples/AvePla.MY.n74.pops.txt
+
+awk '{print $1, $2}' AvePla.MY.n74.pops.txt > AvePla.MY.n74.pops_two_columns.txt
+
+python twisst/twisst.py -t Chr2_4520965_6443840.tree.gz  \
+    -w testtwisst \
+    -g AveM -g AveY -g PlaM -g PlaY \
+    --method fixed \
+    --groupsFile AvePla.MY.n74.pops_two_columns.txt
+
+awk 'NR>1 {print $1"_A", $2; print $1"_B", $2}' AvePla.MY.n74.pops_two_columns.txt > AvePla.MY.n74.pops_two_columns_phase.txt
+
+
+python twisst/twisst.py -t Chr2_4520965_6443840.tree.gz  \
+    -w testtwisst \
+    -g AveM -g AveY -g PlaM -g PlaY \
+    --method fixed \
+    --groupsFile AvePla.MY.n74.pops_two_columns_phase.txt
+
+
+#Running clean
+python genomics_general/phyml_sliding_windows_retain_phy.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region.w50  -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n --log log --tmp
+
+awk 'NR==1 || ($2 >= 45000000 && $2 <= 65000000)' Chr2.AvePla.stitch.SnpOnly.final.geno2  > Chr2.AvePla.stitch.SnpOnly.final.region45-65.geno
+
+python genomics_general/phyml_sliding_windows_retain_phy.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region45-65.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region45-65Mb.w50  -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n --log Chr2.AvePla.stitch.SnpOnly.final.region45-65Mb.w50.log --tmp tmp/phyml_tmpx2wmo8o5
+
+python twisst/twisst.py -t Chr2_45242155_64953314.tree.gz  \
+    -w Chr2.AvePla.stitch.SnpOnly.final.45242155_64953314.tree.twisst \
+    -g AveM -g AveY -g PlaM -g PlaY \
+    --method fixed \
+    --groupsFile AvePla.MY.n74.pops_two_columns_phase.txt
+
+
+
+python genomics_general/raxml_sliding_windows_nodeletion.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region45-65.geno --prefix test.region45-65Mb.w50  -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n --log test.region45-65Mb.w50.log --tmp tmp
+
+
+awk 'NR==1 || ($2 >= 45000000 && $2 <= 45200000)' Chr2.AvePla.stitch.SnpOnly.final.geno2  > Chr2.AvePla.stitch.SnpOnly.final.region450-452.geno
+
+
+python genomics_general/phyml_sliding_windows_retain_phy.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region450-452.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region45-452Mb.w50 -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n --log Chr2.AvePla.stitch.SnpOnly.final.region45-452Mb.w50.log --tmp tmp/
+
+
+Chr2_45242155_45244562_iitt4wh4.phy
+
+
+sed 's/\//|/g' Chr2.AvePla.stitch.SnpOnly.final.region450-452.geno > Chr2.AvePla.stitch.SnpOnly.final.region450-452_phase.geno
+
+
+
+python genomics_general/phyml_sliding_windows_retain_phy.py -T 10 -g Chr2.AvePla.stitch.SnpOnly.final.region45-65.geno --prefix Chr2.AvePla.stitch.SnpOnly.final.region45-65Mb.w50  -w 50 --windType sites --model GTR --phyml /mnt/nfs/clustersw/shared/phyml/3.1/phyml --optimise n --log Chr2.AvePla.stitch.SnpOnly.final.region45-65Mb.w50.log --minPerInd 10
+
+python twisst/twisst.py -t Chr2.AvePla.stitch.SnpOnly.final.region45-65Mb.w50.trees.gz  \
+    -w Chr2.AvePla.stitch.SnpOnly.final.region45-65Mb.w50.twisst \
+    -g AveM -g AveY -g PlaM -g PlaY \
+    --method fixed \
+    --groupsFile AvePla.MY.n74.pops_two_columns_phase.txt
+
+
+conda activate vcflib
